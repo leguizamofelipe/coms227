@@ -2,7 +2,7 @@
 public class E1Practice {
 	public static void main(String[] args) {
 		System.out.println("Hello World. This is Felipe");
-		/*
+		
 		//E1.2
 		int intsum = 0;
 		for (int number=1; number<=10; number ++) {
@@ -15,7 +15,6 @@ public class E1Practice {
 		for (int i=0; i<20; i++) {
 			System.out.println(i);
 		}
-		*/
 		
 		//E1.5
 		
