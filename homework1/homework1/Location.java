@@ -5,6 +5,7 @@ public class Location {
 	public static final double RELATIVE_COST_OF_POSTCARD = 0.05;
 	
 	private String currentLocation = "";
+	private int lodgingCost = 0;
 		
 	public Location(String givenName, int givenLodgingCost) {
 		currentLocation = givenName;
@@ -12,11 +13,11 @@ public class Location {
 	}
 	
 	public String getName(){
-		return "yeet";
+		return currentLocation;
 	}
 	
 	public int lodgingCost() {
-		return 1;
+		return lodgingCost;
 	}
 	
 	public int costToSendPostcard() {
