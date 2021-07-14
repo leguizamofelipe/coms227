@@ -1,15 +1,14 @@
 package homework1;
 
-
 public class Location {
 	public static final double RELATIVE_COST_OF_POSTCARD = 0.05;
 	
-	private String currentLocation = "";
-	private int lodgingCost = 0;
+	private String currentLocation;
+	private int lodgingCost; // Cost of staying the night
 		
 	public Location(String givenName, int givenLodgingCost) {
 		currentLocation = givenName;
-		
+		lodgingCost = givenLodgingCost;
 	}
 	
 	public String getName(){
@@ -21,15 +20,15 @@ public class Location {
 	}
 	
 	public int costToSendPostcard() {
-		return 3;
+		return (int) (lodgingCost * RELATIVE_COST_OF_POSTCARD);
 	}
 	
 	public int maxLengthOfStay(int funds) {
-		return 3;
+		return (int) (funds / lodgingCost);
 	}
 	
 	public int maxNumberOfPostcards(int funds) {
-		return 3;
+		return (int) (funds/(lodgingCost * RELATIVE_COST_OF_POSTCARD));
 	}
 	
 }
