@@ -6,9 +6,8 @@ public class Backpacker {
 	public int funds;
 	public String journal;
 	public int nightsInTrainStation = 0;
-	public int postcardsSent = 0;
-	
-	public Location currentLocation = new Location("",100);
+	public int totalPostcardsSent = 0;
+	public Location currentLocation;
 	
 	public Backpacker (int initialFunds, Location initialLocation) {
 		funds = initialFunds;
@@ -16,8 +15,8 @@ public class Backpacker {
 		journal = initialLocation.getName() + "(start),";
 	}
 	
-	public String getCurrentLocation() {
-		return currentLocation.getName();
+	public Location getCurrentLocation() {
+		return currentLocation;
 	}
 	
 	public int getCurrentFunds() {
@@ -39,19 +38,21 @@ public class Backpacker {
 	public void visit(Location c, int numNights) {
 		currentLocation = c;
 		journal = journal + currentLocation.getName()	+ "(" + String.valueOf(numNights) + "),";	
-		nightsInTrainStation = nightsInTrainStation + (numNights - currentLocation.maxLengthOfStay(funds));
-		funds = funds % (numNights * currentLocation.lodgingCost());
+		nightsInTrainStation += Math.max(0, (numNights - currentLocation.maxLengthOfStay(funds)));
+		funds = funds - ((numNights - nightsInTrainStation) * currentLocation.lodgingCost());
 	}
 	
 	public void sendPostcardsHome(int howMany) {
-		int cost = currentLocation.costToSendPostcard() * howMany;
-		funds = funds % (currentLocation.costToSendPostcard());
-		postcardsSent = postcardsSent + howMany;
+		int maxPostcards = currentLocation.maxNumberOfPostcards(funds);
+		int postcardsSent = Math.min(howMany, maxPostcards);
+		funds -= postcardsSent * currentLocation.costToSendPostcard();
+		totalPostcardsSent += postcardsSent;
 		
 	}
 	
 	public void callHomeForMoney() {
-		
+		funds = funds + SYMPATHY_FACTOR * totalPostcardsSent;
+		totalPostcardsSent = 0;
 	}
 	
 }

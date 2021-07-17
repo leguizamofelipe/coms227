@@ -8,23 +8,38 @@ class TestCase {
 		Location r = new Location("Rome", 70);
 		Location l = new Location("London", 150);
 		
-		Backpacker b = new Backpacker(500, p);
+		int funds = 500;
+		Backpacker b = new Backpacker(funds, p);
 		
-		int funds = 400;
-		/*
-		System.out.println("Location Name: " + c.getName());
-		System.out.println("Cost for one night: " + c.lodgingCost());
-		System.out.println("Cost for postcard: " + c.costToSendPostcard());
-		System.out.println("Max length of stay: " + c.maxLengthOfStay(funds));
-		System.out.println("Max postcards: " + c.maxNumberOfPostcards(funds));
-		*/
-		
+		getStatus(b);
+			
 		b.visit(m, 2);
-		b.visit(r, 4);
-		b.visit(l, 4);
+		b.sendPostcardsHome(5);
 		
-		System.out.println("Journal: " + b.getJournal());
-
+		getStatus(b);
+		
+		b.visit(r, 6);
+		
+		getStatus(b);
+		
+		b.callHomeForMoney();
+		b.callHomeForMoney();
+		
+		getStatus(b);
+	}
+	
+	private static void getStatus(Backpacker b) {
+		System.out.println("****************************************");
+		Location l = b.getCurrentLocation();
+		System.out.println("Location Name: " + l.getName());
+		System.out.println("Cost for one night: " + l.lodgingCost());
+		System.out.println("Cost for postcard: " + l.costToSendPostcard());
+		System.out.println("Max length of stay: " + l.maxLengthOfStay(b.getCurrentFunds()));
+		System.out.println("Max postcards: " + l.maxNumberOfPostcards(b.getCurrentFunds()));
+		System.out.println("Funds: " + b.getCurrentFunds());
+		System.out.println("Nights in train station: " + b.getTotalNightsInTrainStation());
+		System.out.println("****************************************");
+		
 	}
 
 }
