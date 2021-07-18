@@ -10,7 +10,7 @@ public class ExitGate {
 	}
 	
 	public boolean insertCard(ParkingCard c) {
-		if (c.getPaymentTime() <= RateUtil.EXIT_TIME_LIMIT) {
+		if (c.getPaymentTime() <= RateUtil.EXIT_TIME_LIMIT && c.getPaymentTime() > 0) {
 			exitCount ++;
 			return true;
 		}else {
