@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"hw2","l":"CardDispenser"},{"p":"hw2","l":"ExitGate"},{"p":"hw2","l":"ParkingCard"},{"p":"hw2","l":"PayStation"},{"p":"hw2","l":"RateUtil"},{"p":"hw2","l":"TestCase"},{"p":"hw2","l":"TimeClock"}];updateSearchResults();
