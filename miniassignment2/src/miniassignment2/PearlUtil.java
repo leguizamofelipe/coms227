@@ -25,7 +25,11 @@ public class PearlUtil
    */
   public static void collectPearls(State[] states, int start, int end)
   {
-    // TODO
+    for (int i = start; i <= end; i++) {
+    	if (states[i] == PEARL) {
+    		states[i] = EMPTY;
+    	} 
+    }
   }
   
 
@@ -44,8 +48,15 @@ public class PearlUtil
    */
   public static int findRightmostMovableBlock(State[] states, int start)
   {
-    // TODO
-    return 0;
+	boolean found = false;
+	int result = -1;
+	for (int i = start; i >= 0; i--){
+		if (isMovable(states[i]) && !found){
+			result = i;
+			found = true;
+		}
+	}
+	return result;
   }
   
   
@@ -63,8 +74,12 @@ public class PearlUtil
    */
   public static State[] createFromString(String text)
   {
-    // TODO
-    return null;
+	State[] stateArray = new State[text.length()];
+	for (int i = 0; i < text.length(); i++) {
+		State charState = getValue(text.charAt(i));
+		stateArray[i] = charState;
+	}
+    return stateArray;
   }
   
   /**
@@ -85,8 +100,12 @@ public class PearlUtil
    */
   public static boolean isValidForMoveBlocks(State[] states)
   {
-    // TODO
-    return false;
+	boolean firstStateValid = (states[0] == EMPTY || states[0] == OPEN_GATE || states[0] == PORTAL);
+
+	int movableIdx = findRightmostMovableBlock(states, 0);
+	
+	if(states.length > 2 && firstStateValid && isBoundary(states[states.length-1], (movableIdx != -1))) return true;
+	else return false;
   }
   
   /**
