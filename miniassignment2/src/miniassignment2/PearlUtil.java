@@ -165,8 +165,29 @@ public class PearlUtil
    */
   public static void moveBlocks(State[] states) 
   {
-    // TODO
+	  int end = states.length - 2;
+	  while(findRightmostMovableBlock(states, end) != -1) {
+		  int i = findRightmostMovableBlock(states, end);
+		  if(canMerge(states[i], states[i-1])){
+			  states[i] = EMPTY;
+			  states[i-1] = EMPTY;
+			  end = i-2;
+		  }else {
+			  states[end] = states[i];
+			  states[i] = EMPTY;
+			  end = i;
+		  }
+	  }
+	  
+	  /*
+	  for(int i = states.length - 2; i > 1; i--) {
+		  if (isMovable(states[i])) {
+			  if(canMerge(states[i], states[i-1])) {
+
+			  }			  
+		  }
+		  		  
+	  }
+	  */
   }
-
-
 }
