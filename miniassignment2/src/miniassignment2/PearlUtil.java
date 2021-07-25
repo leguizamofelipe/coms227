@@ -31,7 +31,6 @@ public class PearlUtil
     	} 
     }
   }
-  
 
   /**
    * Returns the index of the rightmost movable block that is at or
@@ -58,7 +57,6 @@ public class PearlUtil
 	}
 	return result;
   }
-  
   
   /**
    * Creates a state array from a string description, using the character
@@ -101,10 +99,24 @@ public class PearlUtil
   public static boolean isValidForMoveBlocks(State[] states)
   {
 	boolean firstStateValid = (states[0] == EMPTY || states[0] == OPEN_GATE || states[0] == PORTAL);
-
-	int movableIdx = findRightmostMovableBlock(states, 0);
 	
-	if(states.length > 2 && firstStateValid && isBoundary(states[states.length-1], (movableIdx != -1))) return true;
+	boolean boundaryStateValid = false;
+	boolean containsMovable = false;
+	int boundaryCount = 0;
+	
+	for(int i = 0; i <= states.length - 1; i++) {
+		if(isMovable(states[i])) {
+			containsMovable = true;
+		}
+		if(isBoundary(states[i], containsMovable)){
+			boundaryCount++;
+			if(i == states.length - 1 && boundaryCount == 1) {
+				boundaryStateValid = true;
+			}
+		}
+	}
+	
+	if(states.length > 2 && firstStateValid && boundaryStateValid) return true;
 	else return false;
   }
   
@@ -141,9 +153,31 @@ public class PearlUtil
    *   the player's new index
    */
   public static int movePlayer(State[] states) 
-  {    
-    // TODO
-    return 0;
+  {
+	if(isValidForMovePlayer(states)) {
+		int state = 0;
+		for (int i = 0; i <= states.length - 2; i++) {
+			if(isMovable(states[i])) {
+				state = i-1;
+			}else if(states[i] == SPIKES_ALL) {
+				state = i;
+			}else if(states[i] == OPEN_GATE) {
+				states[i] = CLOSED_GATE;
+			}else {
+				state = states.length - 2;
+			}
+		}
+		
+		if(states[state] == CLOSED_GATE) {
+			states[state] = OPEN_GATE;
+		}
+		
+		collectPearls(states, 0, state);
+		
+		return state;
+	}
+	
+	return 0;
   }
 
   /**
@@ -165,29 +199,46 @@ public class PearlUtil
    */
   public static void moveBlocks(State[] states) 
   {
-	  int end = states.length - 2;
-	  while(findRightmostMovableBlock(states, end) != -1) {
-		  int i = findRightmostMovableBlock(states, end);
-		  if(canMerge(states[i], states[i-1])){
-			  states[i] = EMPTY;
-			  states[i-1] = EMPTY;
-			  end = i-2;
-		  }else {
-			  states[end] = states[i];
-			  states[i] = EMPTY;
-			  end = i;
+	  if(isValidForMoveBlocks(states)) {
+		  int end = states.length - 2;
+		  int endOfStates = end;
+		  while(findRightmostMovableBlock(states, end) != -1) {
+			  int i = findRightmostMovableBlock(states, end);
+			  if(canMerge(states[i], states[i-1])){
+				  states[i] = EMPTY;
+				  states[i-1] = EMPTY;
+				  end = i-2;
+			  }else {
+				  states[end] = states[i];
+				  states[i] = EMPTY;
+				  end = i;
+			  }
+		  }
+		  int beginShiftIndex = end + 1;
+		  
+		  collectPearls(states, beginShiftIndex, endOfStates);
+	  }
+  }
+  
+  public static boolean isValidForMovePlayer(State[] states) {
+	  boolean movablesShifted = false;
+	  // Start with moving block validity
+	  if(isValidForMoveBlocks(states)) {
+		  //Find rightmost block, reject if it is not the second to last (not shifted)
+		  int idx = findRightmostMovableBlock(states, states.length - 1);
+		  if(idx == states.length - 2) {
+			  while(isMovable(states[idx])) {
+				  idx--;
+			  }			  
+			  while(idx >= 0 && !isMovable(states[idx])) {
+				  idx--;
+			  }
+			  if(idx == -1) {
+				  movablesShifted = true;
+			  }
 		  }
 	  }
 	  
-	  /*
-	  for(int i = states.length - 2; i > 1; i--) {
-		  if (isMovable(states[i])) {
-			  if(canMerge(states[i], states[i-1])) {
-
-			  }			  
-		  }
-		  		  
-	  }
-	  */
+	  return movablesShifted;
   }
 }
