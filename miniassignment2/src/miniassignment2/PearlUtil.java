@@ -1,6 +1,8 @@
 package miniassignment2;
 import static miniassignment2.State.*;
 
+import java.util.Scanner;
+
 /**
  * Utility class containing the key algorithms for moves in the
  * a yet-to-be-determined game.
@@ -200,30 +202,43 @@ public class PearlUtil
   public static void moveBlocks(State[] states) 
   {
 	  if(isValidForMoveBlocks(states)) {
-		  int end = states.length - 2;
-		  int endOfStates = end;
-		  while(findRightmostMovableBlock(states, end) != -1) {
-			  int i = findRightmostMovableBlock(states, end);
+		  //String s = State.toString(states, true);
+		  //Scanner scan = new Scanner(s);		  
+		  
+		  int endSearch = states.length - 2;
+		  int lastOpenPos = states.length - 2;
+		  
+		  while(findRightmostMovableBlock(states, endSearch) != -1) {
+			  int i = findRightmostMovableBlock(states, endSearch);
 			  if(canMerge(states[i], states[i-1])){
 				  states[i] = EMPTY;
 				  states[i-1] = EMPTY;
-				  end = i-2;
+				  endSearch = i-2;
 			  }else {
-				  states[end] = states[i];
-				  states[i] = EMPTY;
-				  end = i;
+				  if(lastOpenPos != i) {
+					  states[lastOpenPos] = states[i];
+					  states[i] = EMPTY;
+					  endSearch = i;
+					  lastOpenPos--;
+				  }
 			  }
 		  }
-		  int beginShiftIndex = end + 1;
+		  int beginShiftIndex = endSearch + 1;
 		  
-		  collectPearls(states, beginShiftIndex, endOfStates);
+		  collectPearls(states, beginShiftIndex, states.length - 2);
 	  }
   }
   
   public static boolean isValidForMovePlayer(State[] states) {
 	  boolean movablesShifted = false;
+	  
+	  if(findRightmostMovableBlock(states, states.length - 1) == -1) {
+		  movablesShifted = true;
+	  }
+	  
 	  // Start with moving block validity
 	  if(isValidForMoveBlocks(states)) {
+		  
 		  //Find rightmost block, reject if it is not the second to last (not shifted)
 		  int idx = findRightmostMovableBlock(states, states.length - 1);
 		  if(idx == states.length - 2) {
