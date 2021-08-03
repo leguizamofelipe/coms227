@@ -15,7 +15,7 @@ public class SimpleTest
 {
   public static void main(String[] args)
   {
-
+	/*
     String[] test = {
       "##.###", 
       "##$..#", 
@@ -26,32 +26,25 @@ public class SimpleTest
 
     // getStateSequence
     Pearls game = new Pearls(test, new PearlUtil());
-    StringUtil.printGrid(game);
-    
-
-    
-    
-    /*
+    StringUtil.printGrid(game);    
     State[] states = game.getStateSequence(Direction.UP);
-    System.out.println();
-    
-    Cell c = game.getCell();
     StringUtil.printStateArray(states, 0);
-    System.out.println();
-	*/
-//    String[] testPortals = {
-//      "######", 
-//      "#Ooo$#", 
-//      "# @@ #", 
-//      "#    #", 
-//      "#@O ##",
-//      "#  ###", 
-//      "######"};
+    */
+
+	
+    String[] testPortals = {
+      "######", 
+      "#Ooo$#", 
+      "# @@ #", 
+      "#    #", 
+      "#@O ##",
+      "#  ###", 
+      "######"};
 
     // getStateSequence with portals
-//    game = new Pearls(testPortals, new PearlUtil());
+//    Pearls game = new Pearls(testPortals, new PearlUtil());
 //    StringUtil.printGrid(game);
-//    states = game.getStateSequence(Direction.LEFT);
+//    State[] states = game.getStateSequence(Direction.LEFT);
 //    System.out.println();
 //    StringUtil.printStateArray(states, 0);
 //    System.out.println();
@@ -64,11 +57,11 @@ public class SimpleTest
 //    System.out.println();
 
     // setStateSequence
-//    game = new Pearls(testPortals, new PearlUtil());
-//    states = StringUtil.createFromString(".xxOO.#");
-//    game.setStateSequence(states, Direction.LEFT, 5);
-//    System.out.println();
-//    StringUtil.printGrid(game);
+    Pearls game = new Pearls(testPortals, new PearlUtil());
+    State[] states = StringUtil.createFromString(".xxOO.#");
+    game.setStateSequence(states, Direction.LEFT, 5);
+    System.out.println();
+    StringUtil.printGrid(game);
 
     // Using MoveRecords with movePlayer
 //    PearlUtil util = new PearlUtil();

@@ -1,4 +1,6 @@
 package hw3;
+import java.util.ArrayList;
+
 import api.Cell;
 import api.Direction;
 import api.MoveRecord;
@@ -25,6 +27,9 @@ public class Pearls
   
   public Cell playerCell;
   
+  public int playerCol;
+  public int playerRow;
+  
   // TODO - any other instance variables you need
   
   
@@ -42,8 +47,11 @@ public class Pearls
     grid = StringUtil.createFromStringArray(init);
     util = givenUtil;
     playerCell = getPlayerCell();
+	portalReached = false;
     // TODO - any other initialization you need
   }
+  
+  private boolean portalReached;
   
   /**
    * Returns the number of columns in the grid.
@@ -109,10 +117,71 @@ public class Pearls
   }
   
   public State[] getStateSequence(Direction dir) {
+	  ArrayList<State> States = new ArrayList<State>();
 	  
+	  int row = playerRow;
+	  int col = playerCol;
+	  State currentState = getCell(playerRow, playerCol).getState();
+	  boolean portal = false;
+
+	  while(!State.isBoundary(currentState, isOver())) {
+		  currentState = getCell(row, col).getState();
+		  States.add(currentState);
+		  
+		  if(currentState == State.PORTAL) portal = true; else portal = false;
+		  
+		  int tempRow = getNextRow(row, col, dir, portal, getCell(row, col));
+		  int tempCol = getNextColumn(row, col, dir, portal, getCell(row, col));
+		  row = tempRow;
+		  col = tempCol;	  
+		  
+		  if(portal) portalReached = true;
+
+	  }
 	  
-	  State[] state = new State[5];
-	  return state;
+	  State[] statesSequence = new State[States.size()];
+	  
+	  for(int i = 0; i < States.size(); i++) {
+		  statesSequence[i] = States.get(i);
+	  }
+	  
+	  return statesSequence;
+  }
+  
+  public void setStateSequence(State[] states, Direction dir, int playerIdx) {
+	  int row = playerRow;
+	  int col = playerCol;
+	  State currentState = getCell(playerRow, playerCol).getState();
+	  boolean portal = false;
+	  
+	  int idx = 0;
+
+	  while(!State.isBoundary(currentState, isOver())) {
+		  currentState = getCell(row, col).getState();
+
+		  if(idx == playerIdx) {
+			  getCell(row, col).setState(State.EMPTY);
+			  getCell(row, col).setPlayerPresent(true);
+		  }else if(idx == 0) {
+			  getCell(row, col).setState(State.EMPTY);
+			  getCell(row, col).setPlayerPresent(false);
+		  }else{
+			  getCell(row, col).setState(states[idx]);
+		  }
+			  
+		  
+		  if(currentState == State.PORTAL) portal = true; else portal = false;
+		  
+		  int tempRow = getNextRow(row, col, dir, portal, getCell(row, col));
+		  int tempCol = getNextColumn(row, col, dir, portal, getCell(row, col));
+		  row = tempRow;
+		  col = tempCol;
+		  
+		  if(portal) portalReached = true;		  
+		  idx ++;
+		  
+	  }
+	  
   }
   
   public Cell getPlayerCell() {
@@ -127,15 +196,53 @@ public class Pearls
 	  		boolean present = getCell(r, c).isPlayerPresent();
 	  		
 	  		if(present) {
-	  			playerCell = getCell(r, c);	  			
+	  			playerCell = getCell(r, c);
+	  			playerCol = c;
+	  			playerRow = r;
 	  		}
 	  	}
 	  }
 	  return playerCell;
   }
+  
+  public int getPlayerRow() {
+	  return playerRow;
+  }
+  
+  public int getPlayerCol() {
+	  return playerCol;
+  }
 
-public boolean won() {
-	// TODO Auto-generated method stub
-	return false;
-}
+	public boolean won() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	  
+	public int getNextColumn(int row, int col, Direction dir, boolean doPortalJump, Cell cell) {
+		if(doPortalJump && !portalReached) {
+			col = col + cell.getColumnOffset();
+		}else {
+			if (dir == Direction.LEFT) {
+				col = (col + getColumns() - 1) % getColumns();
+			}else if (dir == Direction.RIGHT) {
+				col = (col + 1) % getColumns();
+			}
+		}
+		
+		return col;
+	}
+	  
+	public int getNextRow(int row, int col, Direction dir, boolean doPortalJump, Cell cell) {
+		if(doPortalJump && !portalReached) {
+			row = row + cell.getRowOffset();			
+		}else {
+			if(dir == Direction.UP) {
+				row = (row + getRows() - 1) % getRows();
+			}else if (dir == Direction.DOWN) {
+				row = (row + 1) % getRows();
+			}
+		}
+
+		return row;
+	}
 }
